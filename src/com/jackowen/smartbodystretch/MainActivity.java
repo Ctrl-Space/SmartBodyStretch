@@ -169,7 +169,7 @@ public class MainActivity extends Activity {
 		@Override
 		public void handleMessage(Message msg) {
 			String result = (String) msg.obj;
-			RecordScore(result);
+			RecordScore(result.trim());
 		}
 	}
 
