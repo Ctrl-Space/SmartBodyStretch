@@ -40,17 +40,17 @@ public class MainActivity extends Activity {
 	// ----------------------------//
 	private Time time = new Time();
 	// ----------------------------//
-	private boolean deviceState=false;	//´ú±íÁËÖÇÄÜÉè±¸µÄ×´Ì¬£¬trueÎªwalk£¬falseÎªwork
-	// ²¼¾Ö¿Ø¼ş
+	private boolean deviceState=false;	//ä»£è¡¨äº†æ™ºèƒ½è®¾å¤‡çš„çŠ¶æ€ï¼Œtrueä¸ºwalkï¼Œfalseä¸ºwork
+	// å¸ƒå±€æ§ä»¶
 	private Button syncBtn;
 	private TextView score_textview;
 	private RatingBar scoreBar;
 	// ---------------------------------//
-	// ÄÚ²¿³ÉÔ±¶ÔÏó
-	private boolean sync = false; // Í¬²½ºó¸ÃÖµÎªtrue
-	// Éú³ÉÒ»¸öHandlerÓÃÓÚ´¦ÀíÀ¶ÑÀÊÇÊÊÅäÆ÷½ÓÊÕµÄÊı¾İ
+	// å†…éƒ¨æˆå‘˜å¯¹è±¡
+	private boolean sync = false; // åŒæ­¥åè¯¥å€¼ä¸ºtrue
+	// ç”Ÿæˆä¸€ä¸ªHandlerç”¨äºå¤„ç†è“ç‰™æ˜¯é€‚é…å™¨æ¥æ”¶çš„æ•°æ®
 	public ReceiverDataHandler receiverDataHandler = new ReceiverDataHandler();
-	// Éú³ÉÒ»¸öÀ¶ÑÀÀàµÄ¶ÔÏó,²¢½«ÉÏ×÷Îª²ÎÊı
+	// ç”Ÿæˆä¸€ä¸ªè“ç‰™ç±»çš„å¯¹è±¡,å¹¶å°†ä¸Šä½œä¸ºå‚æ•°
 	private Bluetooth myBluetooth = new Bluetooth(receiverDataHandler);
 
 	@Override
@@ -66,16 +66,19 @@ public class MainActivity extends Activity {
 
 		time.setToNow();
 		checkDate();
-		Toast toast = Toast.makeText(this, "½ñÌìÒª¾«Éñ±¥ÂúÅ¶£¡", Toast.LENGTH_LONG);
+		Toast toast = Toast.makeText(this, "ä»Šå¤©è¦ç²¾ç¥é¥±æ»¡å“¦ï¼", Toast.LENGTH_LONG);
 		toast.show();
 	}
 
+	//Activityé€€å‡ºä¹‹å‰ï¼Œå…³é—­è“ç‰™é€‚é…å™¨ï¼Œå¤ä½æ ‡å¿—ä½
 	@Override
 	protected void onDestroy() {
 		myBluetooth.closeAdapter();
 		sync = false;
 		super.onDestroy();
 	}
+	
+	//æ£€æŸ¥æ˜¯å¦æ˜¯æ–°çš„ä¸€å¤©
 	private void checkDate() {
 		int year = time.year;
 		int month = time.month;
@@ -111,60 +114,35 @@ public class MainActivity extends Activity {
 		}
 	}
 
-	// Ê¹ÓÃÊµÏÖ½Ó¿ÚÀàµÄ·½·¨
+	// ä½¿ç”¨å®ç°æ¥å£ç±»çš„æ–¹æ³•
 	class syncBtnListener implements OnClickListener {
 		@Override
 		public void onClick(View v) {
-			// ÏÈ¶ÁÈ¡ÒÑ¾­±£´æµÄÖÇÄÜÉè±¸µÄÀ¶ÑÀÃû³Æ£¬Èç¹ûÃ»ÓĞ£¬Ôò·µ»Ønull
+			// å…ˆè¯»å–å·²ç»ä¿å­˜çš„æ™ºèƒ½è®¾å¤‡çš„è“ç‰™åç§°ï¼Œå¦‚æœæ²¡æœ‰ï¼Œåˆ™è¿”å›null
 			SharedPreferences mydatas = getSharedPreferences("datas",Activity.MODE_PRIVATE);
 			myBluetooth.setDeviceName(mydatas.getString("DeviceName", null));
 
 			if (myBluetooth.getDeviceName() == null) {
 				AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-				builder.setTitle("ÌáÊ¾£º");
-				builder.setMessage("ÇëÏÈÉèÖÃÖÇÄÜÉè±¸µÄÀ¶ÑÀÃû³Æ£¡");
-				builder.setPositiveButton("È·ÈÏ", null);
+				builder.setTitle("æç¤ºï¼š");
+				builder.setMessage("è¯·å…ˆè®¾ç½®æ™ºèƒ½è®¾å¤‡çš„è“ç‰™åç§°ï¼");
+				builder.setPositiveButton("ç¡®è®¤", null);
 				builder.show();
 			} else if (sync == false) {
 				myBluetooth.connect();
-				syncBtn.setText("ÒÑÍ¬²½");
+				syncBtn.setText("å·²åŒæ­¥");
 				sync = true;
 			} else if (sync == true) {
 				myBluetooth.sendMessage("stop ");
 				myBluetooth.closeAdapter();
-				syncBtn.setText("ÒÑ¶Ï¿ª");
+				syncBtn.setText("å·²æ–­å¼€");
 				sync = false;
 			}
 		}
 	}// LISTENER END
 
-//	class ConnectThread extends Thread{
-//		@Override
-//		public void run(){
-//			// ÏÈ¶ÁÈ¡ÒÑ¾­±£´æµÄÖÇÄÜÉè±¸µÄÀ¶ÑÀÃû³Æ£¬Èç¹ûÃ»ÓĞ£¬Ôò·µ»Ønull
-//			SharedPreferences mydatas = getSharedPreferences("datas",Activity.MODE_PRIVATE);
-//			myBluetooth.setDeviceName(mydatas.getString("DeviceName", null));
-//
-//			if (myBluetooth.getDeviceName() == null) {
-//				AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-//				builder.setTitle("ÌáÊ¾£º");
-//				builder.setMessage("ÇëÏÈÉèÖÃÖÇÄÜÉè±¸µÄÀ¶ÑÀÃû³Æ£¡");
-//				builder.setPositiveButton("È·ÈÏ", null);
-//				builder.show();
-//			} else if (sync == false) {
-//				myBluetooth.connect();
-//				syncBtn.setText("ÒÑÍ¬²½");
-//				sync = true;
-//			} else if (sync == true) {
-//				myBluetooth.sendMessage("stop ");
-//				myBluetooth.closeAdapter();
-//				syncBtn.setText("ÒÑ¶Ï¿ª");
-//				sync = false;
-//			}
-//		}
-//	}
-	// µ±´ÓÏûÏ¢¶ÓÁĞÖĞÈ¡³öÊı¾İ£¬µ÷ÓÃsendMessage·½·¨·¢ËÍ³öÈ¥£¨ÊÔÑé¹¦ÄÜ£©
-	// Êµ¼Ê¹¦ÄÜĞèÒªĞŞ¸Ä´Ë·½·¨
+	// å½“ä»æ¶ˆæ¯é˜Ÿåˆ—ä¸­å–å‡ºæ•°æ®ï¼Œè°ƒç”¨sendMessageæ–¹æ³•å‘é€å‡ºå»ï¼ˆè¯•éªŒåŠŸèƒ½ï¼‰
+	// å®é™…åŠŸèƒ½éœ€è¦ä¿®æ”¹æ­¤æ–¹æ³•
 	class ReceiverDataHandler extends Handler {
 		@Override
 		public void handleMessage(Message msg) {
@@ -173,7 +151,7 @@ public class MainActivity extends Activity {
 		}
 	}
 
-	// ´¦Àí½ÓÊÕµ½µÄÊı¾İ£¬½«×Ö·û´®×ª»»³ÉÊı×Ö£¬²¢ÀÛ¼Ó
+	// å¤„ç†æ¥æ”¶åˆ°çš„æ•°æ®ï¼Œå°†å­—ç¬¦ä¸²è½¬æ¢æˆæ•°å­—ï¼Œå¹¶ç´¯åŠ 
 	private void RecordScore(String result) {
 		 String sNum = result.replaceAll(" ", "");
 		int score = Integer.parseInt(sNum);
@@ -186,7 +164,7 @@ public class MainActivity extends Activity {
 		if(deviceState){
 			finalWalkScore += score;
 			walkcount += 1;
-			// ±£´æ½ñÌìµÄ×Ü·ÖºÍ¼ÇÂ¼µÄ´ÎÊı¡£ÔòÒ»ÌìµÄ·ÖÊıµÈÓÚ×Ü·Ö³ıÒÔ¼ÇÂ¼µÄ´ÎÊı
+			// ä¿å­˜ä»Šå¤©çš„æ€»åˆ†å’Œè®°å½•çš„æ¬¡æ•°ã€‚åˆ™ä¸€å¤©çš„åˆ†æ•°ç­‰äºæ€»åˆ†é™¤ä»¥è®°å½•çš„æ¬¡æ•°
 			SharedPreferences mydatas = getSharedPreferences("datas",Activity.MODE_PRIVATE);
 			SharedPreferences.Editor mydatasEditor = mydatas.edit();
 			mydatasEditor.putInt("finalWalkScore", finalWalkScore);
@@ -197,7 +175,7 @@ public class MainActivity extends Activity {
 		}else{
 			finalWorkScore += score;
 			workcount += 1;
-			// ±£´æ½ñÌìµÄ×Ü·ÖºÍ¼ÇÂ¼µÄ´ÎÊı¡£ÔòÒ»ÌìµÄ·ÖÊıµÈÓÚ×Ü·Ö³ıÒÔ¼ÇÂ¼µÄ´ÎÊı
+			// ä¿å­˜ä»Šå¤©çš„æ€»åˆ†å’Œè®°å½•çš„æ¬¡æ•°ã€‚åˆ™ä¸€å¤©çš„åˆ†æ•°ç­‰äºæ€»åˆ†é™¤ä»¥è®°å½•çš„æ¬¡æ•°
 			SharedPreferences mydatas = getSharedPreferences("datas",Activity.MODE_PRIVATE);
 			SharedPreferences.Editor mydatasEditor = mydatas.edit();
 			mydatasEditor.putInt("finalWorkScore", finalWorkScore);
@@ -210,7 +188,7 @@ public class MainActivity extends Activity {
 		setRatingBar(score);
 	}
 
-	// ¸ù¾İ·ÖÊıÉè¶¨RantingBarµÄĞÇ¼¶
+	// æ ¹æ®åˆ†æ•°è®¾å®šRantingBarçš„æ˜Ÿçº§
 	private void setRatingBar(int score) {
 		if (score >= 90) {
 			scoreBar.setRating((float) 4.5);
@@ -235,6 +213,7 @@ public class MainActivity extends Activity {
 		}
 	}
 
+	//æ ¹æ®å†å²æ•°æ®ï¼Œç”»å‡ºæŠ˜çº¿å›¾
 	private void ShowLineChart() {
 		
 		int[] dateWorkScore = new int[32];
@@ -253,12 +232,12 @@ public class MainActivity extends Activity {
 		XYMultipleSeriesRenderer renderer = new XYMultipleSeriesRenderer();
         XYMultipleSeriesDataset	dataset = new XYMultipleSeriesDataset();
         
-        renderer.setChartTitle("×î½üµÃ·ÖÕÛÏßÍ¼");
+        renderer.setChartTitle("æœ€è¿‘å¾—åˆ†æŠ˜çº¿å›¾");
         renderer.setBackgroundColor(Color.WHITE);
         renderer.setApplyBackgroundColor(true);
         
-        renderer.setXTitle("ÈÕÆÚ");
-        renderer.setYTitle("µÃ·Ö");
+        renderer.setXTitle("æ—¥æœŸ");
+        renderer.setYTitle("å¾—åˆ†");
         renderer.setAxisTitleTextSize(30);
         
         renderer.setAxesColor(Color.BLUE);
@@ -306,7 +285,7 @@ public class MainActivity extends Activity {
         startActivity(intent);
 	}
 	
-	// Ö»ÔÚ²Ëµ¥µÚÒ»´Î³õÊ¼»¯Ê±µ÷ÓÃ
+	// åªåœ¨èœå•ç¬¬ä¸€æ¬¡åˆå§‹åŒ–æ—¶è°ƒç”¨
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -314,12 +293,12 @@ public class MainActivity extends Activity {
 		return true;
 	}
 
-	// ²Ëµ¥±»ÏÔÊ¾Ç°µ÷ÓÃ
+	// èœå•è¢«æ˜¾ç¤ºå‰è°ƒç”¨
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		return true;
 	}
 
-	// ²Ëµ¥Ïî±»µã»÷Ê±µ÷ÓÃ£¬Ò²¾ÍÊÇ²Ëµ¥µÄ¼àÌı·½·¨
+	// èœå•é¡¹è¢«ç‚¹å‡»æ—¶è°ƒç”¨ï¼Œä¹Ÿå°±æ˜¯èœå•çš„ç›‘å¬æ–¹æ³•
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		final EditText et = new EditText(MainActivity.this);
@@ -329,12 +308,12 @@ public class MainActivity extends Activity {
 		int id = item.getItemId();
 		if (id == R.id.action_settings) {
 			if (!myBluetooth.isConnected()) {
-				Toast.makeText(this, "ÇëÄúÏÈÁ¬½ÓÖÇÄÜÉè±¸£¡", Toast.LENGTH_LONG).show();
+				Toast.makeText(this, "è¯·æ‚¨å…ˆè¿æ¥æ™ºèƒ½è®¾å¤‡ï¼", Toast.LENGTH_LONG).show();
 				return true;
 			}else{
-				final String[] state =new String[]{"·ü°¸Ä£Ê½","ĞĞ×ßÄ£Ê½"};
+				final String[] state =new String[]{"ä¼æ¡ˆæ¨¡å¼","è¡Œèµ°æ¨¡å¼"};
 				AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-				builder.setTitle("ÇëÄúÑ¡ÔñÉè±¸µÄ¹¤×÷»·¾³£º");
+				builder.setTitle("è¯·æ‚¨é€‰æ‹©è®¾å¤‡çš„å·¥ä½œç¯å¢ƒï¼š");
 				builder.setSingleChoiceItems(state, whichState, new DialogInterface.OnClickListener() {
 					
 					@Override
@@ -363,21 +342,21 @@ public class MainActivity extends Activity {
 		} else if (id == R.id.action_auther) {
 			AlertDialog.Builder builder = new AlertDialog.Builder(
 					MainActivity.this);
-			builder.setTitle("×÷Õß");
-			builder.setMessage("Team: APlusÍÅ¶Ó");
+			builder.setTitle("ä½œè€…");
+			builder.setMessage("Team: APluså›¢é˜Ÿ");
 			builder.setPositiveButton("OK", null);
 			builder.show();
 			return true;
 		} else if (id == R.id.action_logout) {
-			//ÏÈ´æÈëÖ®Ç°±£´æµÄDeviceName
+			//å…ˆå­˜å…¥ä¹‹å‰ä¿å­˜çš„DeviceName
 			SharedPreferences theDeviceName = getSharedPreferences("datas",Activity.MODE_PRIVATE);
 			et.setText(theDeviceName.getString("DeviceName", null));
 			
 			AlertDialog.Builder builder = new AlertDialog.Builder(
 					MainActivity.this);
-			builder.setTitle("ÇëÄúÊäÈëÉè±¸µÄÀ¶ÑÀÃû³Æ£º");
+			builder.setTitle("è¯·æ‚¨è¾“å…¥è®¾å¤‡çš„è“ç‰™åç§°ï¼š");
 			builder.setView(et);
-			builder.setPositiveButton("È·ÈÏ",
+			builder.setPositiveButton("ç¡®è®¤",
 					new DialogInterface.OnClickListener() {
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
@@ -393,7 +372,7 @@ public class MainActivity extends Activity {
 							myBluetooth.setDeviceName(result);
 						}
 					});
-			builder.setNegativeButton("È¡Ïû", null);
+			builder.setNegativeButton("å–æ¶ˆ", null);
 			builder.show();
 			return true;
 		}
@@ -402,12 +381,12 @@ public class MainActivity extends Activity {
 		}
 		else if(id == R.id.action_level){
 			if (!myBluetooth.isConnected()) {
-				Toast.makeText(this, "ÇëÄúÏÈÁ¬½ÓÖÇÄÜÉè±¸£¡", Toast.LENGTH_LONG).show();
+				Toast.makeText(this, "è¯·æ‚¨å…ˆè¿æ¥æ™ºèƒ½è®¾å¤‡ï¼", Toast.LENGTH_LONG).show();
 				return true;
 			}else{
-				final String[] state =new String[]{"ÑÏ¸ñÄ£Ê½","ÆÕÍ¨Ä£Ê½","ÇáËÉÄ£Ê½"};
+				final String[] state =new String[]{"ä¸¥æ ¼æ¨¡å¼","æ™®é€šæ¨¡å¼","è½»æ¾æ¨¡å¼"};
 				AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-				builder.setTitle("ÇëÄúÑ¡ÔñÉí×Ë¼ì²âµÄµÈ¼¶£º");
+				builder.setTitle("è¯·æ‚¨é€‰æ‹©èº«å§¿æ£€æµ‹çš„ç­‰çº§ï¼š");
 				builder.setSingleChoiceItems(state, whichLevel, new DialogInterface.OnClickListener() {
 					
 					@Override
