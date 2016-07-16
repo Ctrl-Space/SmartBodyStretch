@@ -1,0 +1,67 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:background="#6600FF">
+
+        <TextView
+            android:id="@+id/dateTextViewId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:text="当前得分"
+            android:textColor="#FFFFFF"
+            android:textSize="30dp"/>
+
+        <TextView
+            android:id="@+id/scoreTextViewId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/dateTextViewId"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:text="90"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="#FFFFFF"
+            android:textSize="150dp"/>
+
+        <RatingBar
+            android:id="@+id/ratingBarId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:isIndicator="true"
+            android:numStars="5"
+            android:stepSize="0.5"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#ffffff">
+
+        <Button
+            android:id="@+id/syncButtonId"
+            android:layout_width="105dp"
+            android:layout_height="105dp"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_margin="10dp"
+            android:background="@drawable/btnchanged"
+            android:text="同步"
+            android:textColor="#3300FF"/>
+
+    </RelativeLayout>
+
+</LinearLayout>
